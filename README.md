@@ -190,11 +190,7 @@ kubectl apply -f baremetal-service-nodeport.yaml
 
 ## Deploying an API server to the cluster
 ```
-kubectl apply -f deployment-api.yml
-```
-you should be able to access api (using Nodeport) by
-```
-curl http://ip:31001/
+kubectl apply -f deployment-http.yml
 ```
 using your dns to point to the external ip you then can access the api by
 ```
