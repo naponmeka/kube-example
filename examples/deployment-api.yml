@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: test-api
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: test-api
+    spec:
+      containers:
+      - name: k8s-demo
+        image: hashicorp/http-echo
+        args: ["-listen=:8080", "-text=\"hello world\""]
+        ports:
+        - name: test-api-port
+          containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-api-service
+spec:
+  ports:
+  - port: 80
+    nodePort: 31001
+    targetPort: test-api-port
+    protocol: TCP
+  selector:
+    app: test-api
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test-api-ingress
+spec:
+  rules:
+  - host: mock.mydomain.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: test-api-service
+          servicePort: 80
